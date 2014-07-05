@@ -11,6 +11,13 @@ println (
     /%
     GMPInt(10_000_000_000)
 )
+var gi0 = GMPInt(2)
+println(gi0.toInt())
+gi0 **= 1024
+println(gi0)
+println(gi0.toInt())
+println(gi0.powmod(GMPInt(10_000_000_000), mod:GMPInt(10_000_000_000)))
+
 var n = GMPInt(1)
 for i in 1...42 {
     n *= i

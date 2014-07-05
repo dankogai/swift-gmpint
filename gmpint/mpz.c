@@ -24,6 +24,12 @@ size_t gmpint_strlen(mpz_t *op, int base) {
 char *gmpint2str(mpz_t *op, int base) {
     return mpz_get_str(NULL, base, *op);
 }
+int gmpint_fits_int(mpz_t *op) {
+    return mpz_fits_slong_p(*op);
+}
+long gmpint2int(mpz_t *op) {
+    return mpz_get_si(*op);
+}
 int gmpint_cmp(mpz_t *op, mpz_t *op2) {
     return mpz_cmp(*op, *op2);
 }
@@ -51,6 +57,9 @@ void gmpint_mulz(mpz_t *rop, mpz_t *op, mpz_t *op2) {
 void gmpint_divmodz(mpz_t *r, mpz_t *q, mpz_t *op, mpz_t *op2) {
     mpz_divmod(*r, *q, *op, *op2);
 }
-void gmpint_divmodui(mpz_t *r, mpz_t *q, mpz_t *op, unsigned long op2) {
-    mpz_divmod_ui(*r, *q, *op, op2);
+void gmpint_powui(mpz_t *rop, mpz_t *op, unsigned long exp) {
+    mpz_pow_ui(*rop, *op, exp);
+}
+void gmpint_powmodz(mpz_t *rop, mpz_t *op, mpz_t *exp, mpz_t *mod) {
+    mpz_powm(*rop, *op, *exp, *mod);
 }

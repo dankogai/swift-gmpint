@@ -31,6 +31,10 @@ class GMPInt {
     deinit {
         gmpint_unset(&mpz)
     }
+    func toInt() -> Int? {
+        return gmpint_fits_int(&mpz) == 0 ?
+            nil : Int(gmpint2int(&mpz))
+    }
 }
 extension GMPInt: Printable {
     func toString(base:Int=10)->String {
@@ -204,4 +208,25 @@ operator infix /% { precedence 150 associativity left }
 @assignment func %=(inout lhs:GMPInt, rhs:Int) -> GMPInt {
     lhs = lhs % rhs
     return lhs
+}
+/// ** pow
+operator infix ** { associativity right precedence 170 }
+@infix func **(lhs:GMPInt, rhs:UInt) -> GMPInt {
+    var rop = GMPInt()
+    gmpint_powui(&rop.mpz, &lhs.mpz, rhs)
+    return rop
+}
+/// **=
+operator infix **= { associativity right precedence 90 }
+@assignment func **=(inout lhs:GMPInt, rhs:UInt) -> GMPInt {
+    gmpint_powui(&lhs.mpz, &lhs.mpz, rhs)
+    return lhs
+}
+/// other methods
+extension GMPInt {
+    func powmod(ext:GMPInt, mod:GMPInt) -> GMPInt {
+        var rop = GMPInt()
+        gmpint_powmodz(&rop.mpz, &self.mpz, &ext.mpz, &mod.mpz)
+        return rop
+    }
 }
