@@ -22,7 +22,7 @@ size_t gmpint_strlen(mpz_t *op, int base) {
     return mpz_sizeinbase(*op, base);
 }
 char *gmpint2str(mpz_t *op, int base) {
-    return mpz_get_str(NULL, base, *op);
+    return (char *)mpz_get_str(NULL, base, *op);
 }
 int gmpint_fits_int(mpz_t *op) {
     return mpz_fits_slong_p(*op);

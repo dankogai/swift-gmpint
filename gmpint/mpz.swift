@@ -21,7 +21,7 @@ class GMPInt {
     init(_ mpz:mpz_t) { self.mpz = mpz }
     init(_ s:String, base:Int=10){
         s.withCString {
-            gmpint_sets(&self.mpz, $0, CInt(base))
+            gmpint_sets(&self.mpz, $0, Int32(base))
         }
     }
     // to work around the difference between
@@ -38,10 +38,10 @@ class GMPInt {
 }
 extension GMPInt: Printable {
     func toString(base:Int=10)->String {
-        let cstr = gmpint2str(&mpz, CInt(base))
-        let result = String.fromCString(cstr)
+        let cstr = gmpint2str(&mpz, Int32(base))
+        let result = String.fromCString(CString(cstr))
         free(cstr)
-        return result
+        return result!
     }
     var description:String { return toString() }
 }
