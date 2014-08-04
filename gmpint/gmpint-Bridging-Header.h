@@ -4,7 +4,7 @@
 
 #include <gmp.h>
 void gmpint_seti(mpz_t *op, long i);
-void gmpint_sets(mpz_t *op, char *str, int base);
+void gmpint_sets(mpz_t *op, const char *str, int base);
 void gmpint_unset(mpz_t *op);
 size_t gmpint_strlen(mpz_t *op, int base);
 char *gmpint2str(mpz_t *op, int base);

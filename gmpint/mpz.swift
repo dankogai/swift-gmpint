@@ -8,15 +8,15 @@
 
 import Darwin
 /// initializes any struct
-func initStruct<T>() -> T {
-    var ptr = UnsafePointer<T>.alloc(sizeof(T.self))
+func blankof<T>(t:T.Type) -> T {
+    var ptr = UnsafeMutablePointer<T>.alloc(sizeof(T))
     var val = ptr.memory
     ptr.destroy()
     return val
 }
 /// Big Integer by GMP
 class GMPInt {
-    var mpz:mpz_t = initStruct()
+    var mpz = blankof(mpz_t)
     init(){ gmpint_seti(&mpz, 0)}
     init(_ mpz:mpz_t) { self.mpz = mpz }
     init(_ s:String, base:Int=10){
@@ -39,23 +39,23 @@ class GMPInt {
 extension GMPInt: Printable {
     func toString(base:Int=10)->String {
         let cstr = gmpint2str(&mpz, Int32(base))
-        let result = String.fromCString(CString(cstr))
+        let result = String.fromCString(cstr)
         free(cstr)
         return result!
     }
     var description:String { return toString() }
 }
 extension GMPInt: Equatable, Comparable {}
-@infix func <(lhs:GMPInt, rhs:GMPInt)->Bool {
+func <(lhs:GMPInt, rhs:GMPInt)->Bool {
     return gmpint_cmp(&lhs.mpz, &rhs.mpz) < 0
 }
-@infix func ==(lhs:GMPInt, rhs:GMPInt)->Bool {
+func ==(lhs:GMPInt, rhs:GMPInt)->Bool {
     return gmpint_cmp(&lhs.mpz, &rhs.mpz) == 0
 }
 /// unary +
-@prefix func +(op:GMPInt) -> GMPInt { return op }
+prefix func +(op:GMPInt) -> GMPInt { return op }
 /// unary -
-@prefix func -(op:GMPInt) -> GMPInt {
+prefix func -(op:GMPInt) -> GMPInt {
     var rop = GMPInt()
     gmpint_negz(&rop.mpz, &op.mpz)
     return rop
@@ -67,93 +67,93 @@ func abs(op:GMPInt)->GMPInt {
     return rop
 }
 /// <<, left bit shift
-@infix func <<(lhs:GMPInt, bits:UInt) -> GMPInt {
+func <<(lhs:GMPInt, bits:UInt) -> GMPInt {
     var rop = GMPInt()
     gmpint_lshift(&rop.mpz, &lhs.mpz, bits)
     return rop
 }
 /// <<=
-@assignment func <<=(inout lhs:GMPInt, bits:UInt) -> GMPInt {
+func <<=(inout lhs:GMPInt, bits:UInt) -> GMPInt {
     gmpint_lshift(&lhs.mpz, &lhs.mpz, bits)
     return lhs
 }
 /// >>, right bit shift
-@infix func >>(lhs:GMPInt, bits:UInt) -> GMPInt {
+func >>(lhs:GMPInt, bits:UInt) -> GMPInt {
     var rop = GMPInt()
     gmpint_rshift(&rop.mpz, &lhs.mpz, bits)
     return rop
 }
 /// >>=
-@assignment func >>=(inout lhs:GMPInt, bits:UInt) -> GMPInt {
+func >>=(inout lhs:GMPInt, bits:UInt) -> GMPInt {
     gmpint_rshift(&lhs.mpz, &lhs.mpz, bits)
     return lhs
 }
 /// binary +
-@infix func +(lhs:GMPInt, rhs:GMPInt) -> GMPInt {
+func +(lhs:GMPInt, rhs:GMPInt) -> GMPInt {
     var rop = GMPInt()
     gmpint_addz(&rop.mpz, &lhs.mpz, &rhs.mpz)
     return rop
 }
-@infix func +(lhs:GMPInt, rhs:Int) -> GMPInt {
+func +(lhs:GMPInt, rhs:Int) -> GMPInt {
     return lhs + GMPInt(rhs)
 }
-@infix func +(lhs:Int, rhs:GMPInt) -> GMPInt {
+func +(lhs:Int, rhs:GMPInt) -> GMPInt {
     return GMPInt(lhs) + rhs
 }
 /// +=
-@assignment func +=(inout lhs:GMPInt, rhs:GMPInt) -> GMPInt {
+func +=(inout lhs:GMPInt, rhs:GMPInt) -> GMPInt {
     gmpint_addz(&lhs.mpz, &lhs.mpz, &rhs.mpz)
     return lhs
 }
-@assignment func +=(inout lhs:GMPInt, rhs:Int) -> GMPInt {
+func +=(inout lhs:GMPInt, rhs:Int) -> GMPInt {
     lhs += GMPInt(rhs)
     return lhs
 }
 /// binary -
-@infix func -(lhs:GMPInt, rhs:GMPInt) -> GMPInt {
+func -(lhs:GMPInt, rhs:GMPInt) -> GMPInt {
     var rop = GMPInt()
     gmpint_subz(&rop.mpz, &lhs.mpz, &rhs.mpz)
     return rop
 }
-@infix func -(lhs:GMPInt, rhs:Int) -> GMPInt {
+func -(lhs:GMPInt, rhs:Int) -> GMPInt {
     return lhs - GMPInt(rhs)
 }
-@infix func -(lhs:Int, rhs:GMPInt) -> GMPInt {
+func -(lhs:Int, rhs:GMPInt) -> GMPInt {
     return GMPInt(lhs) - rhs
 }
 /// -=
-@assignment func -=(inout lhs:GMPInt, rhs:GMPInt) -> GMPInt {
+func -=(inout lhs:GMPInt, rhs:GMPInt) -> GMPInt {
     gmpint_subz(&lhs.mpz, &lhs.mpz, &rhs.mpz)
     return lhs
 }
-@assignment func -=(inout lhs:GMPInt, rhs:Int) -> GMPInt {
+func -=(inout lhs:GMPInt, rhs:Int) -> GMPInt {
     lhs -= GMPInt(rhs)
     return lhs
 }
 /// binary *
-@infix func *(lhs:GMPInt, rhs:GMPInt) -> GMPInt {
+func *(lhs:GMPInt, rhs:GMPInt) -> GMPInt {
     var rop = GMPInt()
     gmpint_mulz(&rop.mpz, &lhs.mpz, &rhs.mpz)
     return rop
 }
-@infix func *(lhs:GMPInt, rhs:Int) -> GMPInt {
+func *(lhs:GMPInt, rhs:Int) -> GMPInt {
     return lhs * GMPInt(rhs)
 }
-@infix func *(lhs:Int, rhs:GMPInt) -> GMPInt {
+func *(lhs:Int, rhs:GMPInt) -> GMPInt {
     return GMPInt(lhs) * rhs
 }
 /// *=
-@assignment func *=(inout lhs:GMPInt, rhs:GMPInt) -> GMPInt {
+func *=(inout lhs:GMPInt, rhs:GMPInt) -> GMPInt {
     gmpint_mulz(&lhs.mpz, &lhs.mpz, &rhs.mpz)
     return lhs
 }
-@assignment func *=(inout lhs:GMPInt, rhs:Int) -> GMPInt {
+func *=(inout lhs:GMPInt, rhs:Int) -> GMPInt {
     lhs *= GMPInt(rhs)
     return lhs
 }
 /// /%, the divmod operator
-operator infix /% { precedence 150 associativity left }
-@infix func /%(lhs:GMPInt, rhs:GMPInt) -> (GMPInt, GMPInt) {
+infix operator /% { precedence 150 associativity left }
+func /%(lhs:GMPInt, rhs:GMPInt) -> (GMPInt, GMPInt) {
     var r = GMPInt(), q = GMPInt()
     // GMP + MacPorts + Yosemite has a bug that
     //   libdyld.dylib`stack_not_16_byte_aligned_error:
@@ -165,60 +165,60 @@ operator infix /% { precedence 150 associativity left }
     gmpint_divmodz(&r.mpz, &q.mpz, &n.mpz, &d.mpz)
     return (r, q >> 64)
 }
-@infix func /%(lhs:GMPInt, rhs:Int) -> (GMPInt, GMPInt) {
+func /%(lhs:GMPInt, rhs:Int) -> (GMPInt, GMPInt) {
     return lhs /% GMPInt(rhs)
 }
-@infix func /%(lhs:Int, rhs:GMPInt) -> (GMPInt, GMPInt) {
+func /%(lhs:Int, rhs:GMPInt) -> (GMPInt, GMPInt) {
     return GMPInt(lhs) /% rhs
 }
 /// binary /
-@infix func /(lhs:GMPInt, rhs:GMPInt) -> GMPInt {
+func /(lhs:GMPInt, rhs:GMPInt) -> GMPInt {
     return (lhs /% rhs).0
 }
-@infix func /(lhs:GMPInt, rhs:Int) -> GMPInt {
+func /(lhs:GMPInt, rhs:Int) -> GMPInt {
     return (lhs /% rhs).0
 }
-@infix func /(lhs:Int, rhs:GMPInt) -> GMPInt {
+func /(lhs:Int, rhs:GMPInt) -> GMPInt {
     return (lhs /% rhs).0
 }
 /// /=
-@assignment func /=(inout lhs:GMPInt, rhs:GMPInt) -> GMPInt {
+func /=(inout lhs:GMPInt, rhs:GMPInt) -> GMPInt {
     lhs = lhs / rhs
     return lhs
 }
-@assignment func /=(inout lhs:GMPInt, rhs:Int) -> GMPInt {
+func /=(inout lhs:GMPInt, rhs:Int) -> GMPInt {
     lhs = lhs / rhs
     return lhs
 }
 /// binary %
-@infix func %(lhs:GMPInt, rhs:GMPInt) -> GMPInt {
+func %(lhs:GMPInt, rhs:GMPInt) -> GMPInt {
     return (lhs /% rhs).1
 }
-@infix func %(lhs:GMPInt, rhs:Int) -> GMPInt {
+func %(lhs:GMPInt, rhs:Int) -> GMPInt {
     return (lhs /% rhs).1
 }
-@infix func %(lhs:Int, rhs:GMPInt) -> GMPInt {
+func %(lhs:Int, rhs:GMPInt) -> GMPInt {
     return (lhs /% rhs).1
 }
 /// /=
-@assignment func %=(inout lhs:GMPInt, rhs:GMPInt) -> GMPInt {
+func %=(inout lhs:GMPInt, rhs:GMPInt) -> GMPInt {
     lhs = lhs % rhs
     return lhs
 }
-@assignment func %=(inout lhs:GMPInt, rhs:Int) -> GMPInt {
+func %=(inout lhs:GMPInt, rhs:Int) -> GMPInt {
     lhs = lhs % rhs
     return lhs
 }
 /// ** pow
-operator infix ** { associativity right precedence 170 }
-@infix func **(lhs:GMPInt, rhs:UInt) -> GMPInt {
+infix operator ** { associativity right precedence 170 }
+func **(lhs:GMPInt, rhs:UInt) -> GMPInt {
     var rop = GMPInt()
     gmpint_powui(&rop.mpz, &lhs.mpz, rhs)
     return rop
 }
 /// **=
-operator infix **= { associativity right precedence 90 }
-@assignment func **=(inout lhs:GMPInt, rhs:UInt) -> GMPInt {
+infix operator **= { associativity right precedence 90 }
+func **=(inout lhs:GMPInt, rhs:UInt) -> GMPInt {
     gmpint_powui(&lhs.mpz, &lhs.mpz, rhs)
     return lhs
 }
