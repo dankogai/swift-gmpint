@@ -155,15 +155,20 @@ func *=(inout lhs:GMPInt, rhs:Int) -> GMPInt {
 infix operator /% { precedence 150 associativity left }
 func /%(lhs:GMPInt, rhs:GMPInt) -> (GMPInt, GMPInt) {
     var r = GMPInt(), q = GMPInt()
-    // GMP + MacPorts + Yosemite has a bug that
+    // GMP 6.0.0 + MacPorts + Yosemite had a bug that
     //   libdyld.dylib`stack_not_16_byte_aligned_error:
     // when rhs fits uint.
     // to work around it, we left-shift both sides with 64
     // then right shift the remainder w/ 64
+    // which got fixed in GMP 6.0.0_1
+    /*
     var n = lhs << 64
     var d = rhs << 64
     gmpint_divmodz(&r.mpz, &q.mpz, &n.mpz, &d.mpz)
     return (r, q >> 64)
+    */
+    gmpint_divmodz(&r.mpz, &q.mpz, &lhs.mpz, &rhs.mpz)
+    return (r, q)
 }
 func /%(lhs:GMPInt, rhs:Int) -> (GMPInt, GMPInt) {
     return lhs /% GMPInt(rhs)
