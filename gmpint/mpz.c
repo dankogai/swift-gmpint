@@ -12,7 +12,7 @@
 void gmpint_seti(mpz_t *op, int i) {
     mpz_init_set_si(*op, i);
 }
-void gmpint_sets(mpz_t *op, const char *str, int base){
+void gmpint_sets(mpz_t *op, const char *str, int base) {
     mpz_init_set_str(*op, str, base);
 }
 void gmpint_unset(mpz_t *op) {

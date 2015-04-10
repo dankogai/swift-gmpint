@@ -7,16 +7,9 @@
 //
 
 import Darwin
-/// initializes any struct
-func blankof<T>(t:T.Type) -> T {
-    var ptr = UnsafeMutablePointer<T>.alloc(sizeof(T))
-    var val = ptr.memory
-    ptr.destroy()
-    return val
-}
 /// Big Integer by GMP
 class GMPInt {
-    var mpz = blankof(mpz_t)
+    private var mpz = mpz_t()
     init(){ gmpint_seti(&mpz, 0)}
     init(_ mpz:mpz_t) { self.mpz = mpz }
     init(_ s:String, base:Int=10){
