@@ -30,13 +30,12 @@ for i in Array(1...42).reverse() {
     n /= i
     println("fact(\(i - 1)) = \(n)")
 }
-var f0 = GMPInt(0)
-var f1 = GMPInt(1)
-for i in 0...42 {
+var f0 = GMPInt(0), f1 = GMPInt(1)
+for i in 0...255 {
     println("fib(\(i)) = \(f1)")
     (f0, f1) = (f1, f0+f1)
 }
-for i in Array(1...42).reverse() {
+for i in Array(1...255).reverse() {
     (f0, f1) = (f1-f0, f0)
-    println("fib(\(i - 1)) = \(f1)")
+    println("fib(\(i - 1)) = \(f0)")
 }
