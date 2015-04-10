@@ -13,9 +13,12 @@ println (
 )
 var gi0 = GMPInt(2)
 println(gi0.toInt())
+println(gi0.asInt == gi0.toInt())
+println(gi0.asInt! == 2)
 gi0 **= 1024
 println(gi0)
 println(gi0.toInt())
+println(gi0.asInt == gi0.toInt())
 println(gi0.powmod(GMPInt(10_000_000_000), mod:GMPInt(10_000_000_000)))
 
 var n = GMPInt(1)

@@ -35,6 +35,9 @@ class GMPInt {
         return gmpint_fits_int(&mpz) == 0 ?
             nil : Int(gmpint2int(&mpz))
     }
+    var asInt: Int? {
+        return self.toInt()
+    }
 }
 extension GMPInt: Printable {
     func toString(base:Int=10)->String {
