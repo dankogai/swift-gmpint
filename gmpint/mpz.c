@@ -6,7 +6,6 @@
 //  Copyright (c) 2014 Dan Kogai. All rights reserved.
 //
 
-#include <stdio.h>
 #include <gmp.h>
 
 void gmpint_seti(mpz_t *op, int i) {
